@@ -175,6 +175,14 @@ MOCK_MODEL_ACCURACIES = [
 st.markdown("<h1 class='header-title'>🌱 Smart Fertilizer Recommendation</h1>", unsafe_allow_html=True)
 st.markdown("<p class='text-center text-lg text-gray-400 mb-8'>Input your soil and crop conditions to get an optimal fertilizer suggestion.</p>", unsafe_allow_html=True)
 
+# --- LANGUAGE SELECTOR (added, does not alter app logic/content) ---
+# This replicates the simple dropdown appearance in your screenshot.
+if "ui_lang" not in st.session_state:
+    st.session_state["ui_lang"] = "Kannada"  # default shown in screenshot
+
+st.sidebar.markdown("### Language / ಭಾಷೆ")
+st.session_state["ui_lang"] = st.sidebar.selectbox("", ["Kannada", "English"], index=0 if st.session_state["ui_lang"] == "Kannada" else 1)
+
 # Use columns for the two main panels
 col_input, col_result = st.columns([2, 1])
 
@@ -248,12 +256,8 @@ with col_result:
         <p class='text-sm text-green-300'>{reason}</p>
         """, unsafe_allow_html=True)
     else:
-        # Display the initial message
+        # Display the initial message WITHOUT the large decorative SVG (removed)
         st.markdown("""
-        <svg class="w-16 h-16 text-green-500 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354c.422-.422 1.09-.422 1.512 0l.47.47.47.47a1.071 1.071 0 001.512 0l.47-.47.47-.47a1.071 1.071 0 011.512 0l.47.47.47.47a1.071 1.071 0 001.512 0l.47-.47.47-.47a1.071 1.071 0 011.512 0l.47.47.47.47a1.071 1.071 0 001.512 0l.47-.47.47-.47" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 3.828a2 2 0 00-2.828 0l-3.828 3.828a2 2 0 000 2.828l3.828 3.828a2 2 0 002.828 0l3.828-3.828a2 2 0 000-2.828l-3.828-3.828z" />
-        </svg>
         <p class='text-lg text-gray-300'>Enter your data and click 'Get Recommendation'.</p>
         """, unsafe_allow_html=True)
     
@@ -269,12 +273,12 @@ with col_result:
         # Updated text colors for dark mode visibility
         st.markdown(f"""
         <div class="text-sm">
-            <div class="flex justify-between mb-1">s
+            <div class="flex justify-between mb-1">
                 <span class="font-medium text-gray-300">{model['name']}</span>
                 <span class="font-semibold text-green-300">{accuracy_percent:.1f}%</span>
             </div>
             <div class="w-full bg-gray-600 rounded-full h-2.5">
-                <div class="h-2.5 rounded-full bg-{model['color']}-600 transition-all duration-700 ease-out" style="width: {accuracy_percent}%;"></div>
+                <div class="h-2.5 rounded-full" style="background-color: #10b981; width: {accuracy_percent}%;"></div>
             </div>
         </div>
         """, unsafe_allow_html=True)
