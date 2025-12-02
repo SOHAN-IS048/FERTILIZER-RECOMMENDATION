@@ -125,7 +125,7 @@ TRANSLATIONS = {
         "potassium": "ಪೊಟ್ಯಾಸಿಯಂ (K) - ppm",
         "temperature": "ತಾಪಮಾನ (°C)",
         "humidity": "ಆರ್ದ್ರತೆ (%)",
-        "moisture": "ಮಣ್ಣಿನ ಒಡ್ಡಲೆ/ಆರ್ಡ್ರತೆ (%)",
+        "moisture": "ತೇವಾಂಶ (%)",
         "soil_type": "ಮಣ್ಣಿನ ಪ್ರಕಾರ",
         "crop_type": "ಬೆಳೆ ಪ್ರಕಾರ",
         "get_btn": "ಉಲ್ಬಣ ಶಿಫಾರಸು ಪಡೆ (Get Recommendation)",
@@ -283,5 +283,6 @@ with col_result:
             </div>
         </div>
         """, unsafe_allow_html=True)
+
 
 
