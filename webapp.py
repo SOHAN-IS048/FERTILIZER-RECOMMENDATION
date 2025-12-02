@@ -4,60 +4,14 @@ import streamlit as st
 st.set_page_config(
     page_title="Smart Fertilizer Recommendation",
     layout="wide",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"  # <-- sidebar open so language selector is visible
 )
-
-# --- Simple text dictionary (English + easy Kannada) ---
-TEXTS = {
-    "English": {
-        "title": "🌱 Smart Fertilizer Recommendation",
-        "subtitle": "Input your soil and crop conditions to get an optimal fertilizer suggestion.",
-        "lang_header": "Language / ಭಾಷೆ",
-        "soil_crop_data": "Soil & Crop Data",
-        "nutrient_levels": "Nutrient and Environmental Levels",
-        "nitrogen": "Nitrogen (N) - ppm",
-        "phosphorus": "Phosphorus (P) - ppm",
-        "potassium": "Potassium (K) - ppm",
-        "temperature": "Temperature (°C)",
-        "humidity": "Humidity (%)",
-        "moisture": "Moisture (%)",
-        "soil_and_crop_type": "Soil and Crop Type",
-        "soil_type": "Soil Type",
-        "crop_type": "Crop Type",
-        "btn_recommend": "Get Fertilizer Recommendation",
-        "error_inputs": "Please ensure all numerical inputs are valid and non-negative.",
-        "recommended_title": "Recommended Fertilizer",
-        "helper_text": "Enter your data and click 'Get Fertilizer Recommendation'.",
-        "rec_label": "Recommendation:",
-        "model_perf_title": "Model Performance Comparison (Simulated)",
-    },
-    "Kannada": {
-        "title": "🌱 ಸ್ಮಾರ್ಟ್ ಗೊಬ್ಬರ ಶಿಫಾರಸು",
-        "subtitle": "ನಿಮ್ಮ ಮಣ್ಣು ಮತ್ತು ಬೆಳೆ ಮಾಹಿತಿಯನ್ನು ನಮೂದಿಸಿ, ಸೂಕ್ತ ಗೊಬ್ಬರ ಶಿಫಾರಸು ಪಡೆಯಿರಿ.",
-        "lang_header": "ಭಾಷೆ / Language",
-        "soil_crop_data": "ಮಣ್ಣು ಮತ್ತು ಬೆಳೆ ಮಾಹಿತಿ",
-        "nutrient_levels": "ಪೋಷಕಾಂಶ ಮತ್ತು ಪರಿಸರ ಮಟ್ಟಗಳು",
-        "nitrogen": "ನೈಟ್ರೋಜನ್ (N) - ಪಿಪಿಎಮ್",
-        "phosphorus": "ಫಾಸ್‌ಫರಸ್ (P) - ಪಿಪಿಎಮ್",
-        "potassium": "ಪೊಟಾಷಿಯಂ (K) - ಪಿಪಿಎಮ್",
-        "temperature": "ತಾಪಮಾನ (°C)",
-        "humidity": "ಆರ್ದ್ರತೆ (%)",
-        "moisture": "ಭೂಮಿಯ ತೇವಾಂಶ (%)",
-        "soil_and_crop_type": "ಮಣ್ಣು ಮತ್ತು ಬೆಳೆ ಪ್ರಕಾರ",
-        "soil_type": "ಮಣ್ಣು ಪ್ರಕಾರ",
-        "crop_type": "ಬೆಳೆ ಪ್ರಕಾರ",
-        "btn_recommend": "ಗೊಬ್ಬರ ಶಿಫಾರಸು ಪಡೆಯಿರಿ",
-        "error_inputs": "ದಯವಿಟ್ಟು ಎಲ್ಲ ಸಂಖ್ಯಾ ಮೌಲ್ಯಗಳು ಸರಿಯಾಗಿವೆ ಮತ್ತು ನೆಗೆಟಿವ್ ಅಲ್ಲ ಎಂಬುದನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
-        "recommended_title": "ಶಿಫಾರಸಾದ ಗೊಬ್ಬರ",
-        "helper_text": "ದಯವಿಟ್ಟು ಡೇಟಾ ನಮೂದಿಸಿ ಮತ್ತು 'ಗೊಬ್ಬರ ಶಿಫಾರಸು ಪಡೆಯಿರಿ' ಕ್ಲಿಕ್ ಮಾಡಿ.",
-        "rec_label": "ಶಿಫಾರಸು:",
-        "model_perf_title": "ಮಾದರಿ ಸಾಧನೆ ಹೋಲಿಕೆ (ಸಿಮ್ಯುಲೇಟೆಡ್)",
-    }
-}
 
 # Custom CSS for a clean, professional look (mimicking Tailwind classes where necessary)
 st.markdown("""
 <style>
+    /* *** START OF DARK MODE CHANGES ***
+    */
     .stApp {
         background-color: #1f2937; /* Dark Gray background (Slate-800) */
         color: #f3f4f6; /* Light text color (Gray-100) */
@@ -128,11 +82,11 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# --- Rule-Based Recommendation Logic (unchanged) ---
+# --- Rule-Based Recommendation Logic ---
 
 RECOMMENDATIONS = {
     'N_Low': {'fertilizer': 'Urea & N-Heavy Blend (46-0-0)', 'reason': 'Nitrogen (N) is severely low. Use a high-N fertilizer, especially for foliage-heavy crops.'},
-    'P_Low': {'fertilizer': 'Diammonium Phosphate (DAP) or SSP', 'reason': 'Phosphorus (P) is the limiting nutrient. Apply DAP (18-46-0) or Single Super Phosphate for root development.'},
+    'P_Low': {'fertilizer': 'Diammonium Phosphate (DAP) or SSP', 'reason': 'Phosphorous (P) is the limiting nutrient. Apply DAP (18-46-0) or Single Super Phosphate for root development.'},
     'K_Low': {'fertilizer': 'Muriate of Potash (MOP) or Potash Sulfate', 'reason': 'Potassium (K) is low. Potash is essential for plant health, water, and disease resistance.'},
     'NPK_Balanced': {'fertilizer': '10-10-10 Universal Mix or Complex Fertilizer', 'reason': 'NPK levels are generally balanced. A complex fertilizer provides maintenance nutrients for overall growth.'},
     'High_NPK': {'fertilizer': 'Balanced Micronutrient Formula & Manure', 'reason': 'Primary nutrients (NPK) are high. Focus on organic manure or micronutrient supplements (e.g., Boron, Zinc).'},
@@ -198,117 +152,94 @@ MOCK_MODEL_ACCURACIES = [
     {"name": "K-Nearest Neighbors (KNN)", "accuracy": 0.892, "color": "red"}
 ]
 
+# --- Header ---
+st.markdown("<h1 class='header-title'>🌱 Smart Fertilizer Recommendation</h1>", unsafe_allow_html=True)
+st.markdown("<p class='text-center text-lg text-gray-400 mb-8'>Input your soil and crop conditions to get an optimal fertilizer suggestion.</p>", unsafe_allow_html=True)
 
-# --- UI ---
-
-# language selector (English / Kannada)
+# --- LANGUAGE SELECTOR (English / Kannada, spelling fixed) ---
 if "ui_lang" not in st.session_state:
-    st.session_state["ui_lang"] = "Kannada"  # default as you liked
+    st.session_state["ui_lang"] = "English"
 
-st.sidebar.markdown(f"### {TEXTS['English']['lang_header']}")
 st.session_state["ui_lang"] = st.sidebar.selectbox(
-    "",
-    ["Kannada", "English"],
-    index=0 if st.session_state["ui_lang"] == "Kannada" else 1,
-)
-lang = st.session_state["ui_lang"]
-
-# header
-st.markdown(f"<h1 class='header-title'>{TEXTS[lang]['title']}</h1>", unsafe_allow_html=True)
-st.markdown(
-    f"<p class='text-center text-lg text-gray-400 mb-8'>{TEXTS[lang]['subtitle']}</p>",
-    unsafe_allow_html=True,
+    "Language / ಭಾಷೆ",
+    ["English", "Kannada"],
+    index=0 if st.session_state["ui_lang"] == "English" else 1
 )
 
+# (Right now this selection is only stored; we’re not changing labels/text.
+# You can later use st.session_state["ui_lang"] to show Kannada text if you want.)
+
+# --- Layout ---
 col_input, col_result = st.columns([2, 1])
 
 with col_input:
-    st.header(TEXTS[lang]["soil_crop_data"], divider="green")
+    st.header("Soil & Crop Data", divider='green')
     
-    st.subheader(TEXTS[lang]["nutrient_levels"])
+    st.subheader("Nutrient and Environmental Levels")
     c1, c2, c3 = st.columns(3)
     
     with c1:
-        N = st.number_input(
-            TEXTS[lang]["nitrogen"], value=40, min_value=0, step=5,
-            help="Concentration of Nitrogen in the soil."
-        )
+        N = st.number_input("Nitrogen (N) - ppm", value=40, min_value=0, step=5, help="Concentration of Nitrogen in the soil.")
     with c2:
-        P = st.number_input(
-            TEXTS[lang]["phosphorus"], value=50, min_value=0, step=5,
-            help="Concentration of Phosphorus in the soil."
-        )
+        P = st.number_input("Phosphorous (P) - ppm", value=50, min_value=0, step=5, help="Concentration of Phosphorous in the soil.")
     with c3:
-        K = st.number_input(
-            TEXTS[lang]["potassium"], value=60, min_value=0, step=5,
-            help="Concentration of Potassium in the soil."
-        )
+        K = st.number_input("Potassium (K) - ppm", value=60, min_value=0, step=5, help="Concentration of Potassium in the soil.")
 
     c4, c5, c6 = st.columns(3)
 
     with c4:
-        T = st.number_input(TEXTS[lang]["temperature"], value=25.0, min_value=0.0, max_value=50.0, step=0.5)
+        T = st.number_input("Temperature (°C)", value=25.0, min_value=0.0, max_value=50.0, step=0.5)
     with c5:
-        H = st.number_input(TEXTS[lang]["humidity"], value=65.0, min_value=0.0, max_value=100.0, step=1.0)
+        H = st.number_input("Humidity (%)", value=65.0, min_value=0.0, max_value=100.0, step=1.0)
     with c6:
-        M = st.number_input(TEXTS[lang]["moisture"], value=40.0, min_value=0.0, max_value=100.0, step=1.0)
+        M = st.number_input("Moisture (%)", value=40.0, min_value=0.0, max_value=100.0, step=1.0)
 
-    st.subheader(TEXTS[lang]["soil_and_crop_type"])
+    st.subheader("Soil and Crop Type")
     c7, c8 = st.columns(2)
     
     with c7:
         soil_type = st.selectbox(
-            TEXTS[lang]["soil_type"],
-            ("Loamy", "Sandy", "Clayey", "Silt", "Peat"),
-            index=0,
+            "Soil Type",
+            ('Loamy', 'Sandy', 'Clayey', 'Silt', 'Peat'),
+            index=0
         )
     
     with c8:
         crop_type = st.selectbox(
-            TEXTS[lang]["crop_type"],
-            ("Rice", "Maize", "Wheat", "Millet", "Cotton", "Pulses", "Vegetables"),
-            index=0,
+            "Crop Type",
+            ('Rice', 'Maize', 'Wheat', 'Millet', 'Cotton', 'Pulses', 'Vegetables'),
+            index=0
         )
 
-    if st.button(TEXTS[lang]["btn_recommend"], use_container_width=True):
+    if st.button("Get Fertilizer Recommendation", use_container_width=True):
         if any(v is None or v < 0 for v in [N, P, K, T, H, M]):
-            st.error(TEXTS[lang]["error_inputs"])
+            st.error("Please ensure all numerical inputs are valid and non-negative.")
         else:
             fertilizer, reason = get_recommendation(N, P, K, M, soil_type, crop_type)
             st.session_state.result = (fertilizer, reason)
-
-    if "result" not in st.session_state:
+    
+    if 'result' not in st.session_state:
         st.session_state.result = (None, None)
 
 with col_result:
-    st.markdown(
-        f"<h2 class='text-xl font-bold text-green-800 mb-4'>{TEXTS[lang]['recommended_title']}</h2>",
-        unsafe_allow_html=True,
-    )
+    st.markdown("<h2 class='text-xl font-bold text-green-800 mb-4'>Recommended Fertilizer</h2>", unsafe_allow_html=True)
 
     if st.session_state.result[0]:
         fertilizer, reason = st.session_state.result
-        st.markdown(f"<div class='result-title'>{TEXTS[lang]['rec_label']}</div>", unsafe_allow_html=True)
+        st.markdown("<div class='result-title'>Recommendation:</div>", unsafe_allow_html=True)
         st.markdown(
             f"<div class='result-text'><strong>{fertilizer}</strong><br><span>{reason}</span></div>",
-            unsafe_allow_html=True,
+            unsafe_allow_html=True
         )
     else:
-        st.markdown(
-            f"<p class='text-lg text-gray-300'>{TEXTS[lang]['helper_text']}</p>",
-            unsafe_allow_html=True,
-        )
-
+        st.markdown("<p class='text-lg text-gray-300'>Enter your data and click 'Get Recommendation'.</p>", unsafe_allow_html=True)
+    
     st.markdown("---")
-    st.markdown(
-        f"<h3 class='text-lg font-bold text-green-400 text-center mb-3'>{TEXTS[lang]['model_perf_title']}</h3>",
-        unsafe_allow_html=True,
-    )
+    st.markdown("<h3 class='text-lg font-bold text-green-400 text-center mb-3'>Model Performance Comparison (Simulated)</h3>", unsafe_allow_html=True)
     
     for model in MOCK_MODEL_ACCURACIES:
         accuracy_percent = model["accuracy"] * 100
-        st.markdown(
-            f"""
+        st.markdown(f"""
         <div class="text-sm" style="margin-bottom:10px;">
             <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                 <span style="color:#cbd5e1;">{model['name']}</span>
@@ -318,6 +249,4 @@ with col_result:
                 <div style="background-color:#10b981; height:10px; border-radius:999px; width:{accuracy_percent}%;"></div>
             </div>
         </div>
-        """,
-            unsafe_allow_html=True,
-        )
+        """, unsafe_allow_html=True)
