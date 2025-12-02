@@ -136,7 +136,7 @@ TRANSLATIONS = {
         "model_names": {
             "Decision Tree (Basis for Rules)": "ನಿರ್ಣಾಯಕ ಮರ (Decision Tree)",
             "Random Forest Classifier": "ರೆಂಡಮ್ ಫಾರೆಸ್ಟ್ ಕ್ಲಾಸಿಫೈರ್",
-            "Support Vector Machine (SVM)": "ಸಪೋರ್ಟ್ вэಕ್ಟರ್ ಮೆಶೀನ್ (SVM)",
+            "Support Vector Machine (SVM)": "ಸಪೋರ್ಟ್ ವೆಕ್ಟರ್ ಮೆಷಿನ್ (SVM)",
             "K-Nearest Neighbors (KNN)": "ಕೆ-ನಿಯರೆಸ್ಟ್ ನೈಬರ್ಸ್ (KNN)"
         }
     }
@@ -283,3 +283,4 @@ with col_result:
             </div>
         </div>
         """, unsafe_allow_html=True)
+
