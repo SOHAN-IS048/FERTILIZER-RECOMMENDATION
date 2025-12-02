@@ -1,13 +1,13 @@
 import streamlit as st
 
-# --- Configuration and Styling ---
+# --- Configuration ---
 st.set_page_config(
     page_title="Smart Fertilizer Recommendation",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# --- CSS (unchanged look) ---
+# --- CSS (visuals unchanged) ---
 st.markdown("""
 <style>
     .stApp { background-color: #1f2937; color: #f3f4f6; font-family: 'Inter', sans-serif; }
@@ -22,9 +22,9 @@ st.markdown("""
     .stAlert { border-radius: 0.5rem; padding: 1rem; }
     .result-title { color: #9ae6b4; font-weight: 700; margin-bottom: 0.3rem; }
     .result-text { color: #d1fae5; font-size: 1rem; }
+    .small-muted { color: #cbd5e1; font-size: 0.95rem; }
 </style>
 """, unsafe_allow_html=True)
-
 
 # --- Rule-Based Recommendation Logic (unchanged) ---
 RECOMMENDATIONS = {
@@ -64,7 +64,7 @@ def get_recommendation(N, P, K, M, SoilType, CropType):
     rec = RECOMMENDATIONS[recommendation_key]
     final_fertilizer = rec['fertilizer']; final_reason = rec['reason']
 
-    # Crop-specific adjustments (must match internal crop_type values)
+    # Crop-specific adjustments
     if recommendation_key == 'N_Low' and CropType in ['Rice', 'Maize']:
         final_fertilizer = 'High-Grade Urea (46-0-0)'
         final_reason += f" Urea is highly effective for high-demand, grain-producing crops like {CropType}."
@@ -88,8 +88,7 @@ MOCK_MODEL_ACCURACIES = [
     {"name": "K-Nearest Neighbors (KNN)", "accuracy": 0.892, "color": "red"}
 ]
 
-
-# --- TRANSLATIONS (English + Easy Kannada) ---
+# --- TRANSLATIONS (English + Kannada) ---
 TRANSLATIONS = {
     "English": {
         "title": "🌱 Smart Fertilizer Recommendation",
@@ -108,60 +107,70 @@ TRANSLATIONS = {
         "recommended": "Recommended Fertilizer",
         "recommendation_label": "Recommendation:",
         "helper": "Enter your data and click 'Get Recommendation'.",
-        "model_perf": "Model Performance Comparison (Simulated)"
+        "model_perf": "Model Performance Comparison (Simulated)",
+        "model_names": {
+            "Decision Tree (Basis for Rules)": "Decision Tree (Basis for Rules)",
+            "Random Forest Classifier": "Random Forest Classifier",
+            "Support Vector Machine (SVM)": "Support Vector Machine (SVM)",
+            "K-Nearest Neighbors (KNN)": "K-Nearest Neighbors (KNN)"
+        }
     },
     "Kannada": {
-        "title": "🌱 ಸ್ಮಾರ್ಟ್ ಬ Fertilizer ಶಿಫಾರಸು",  # kept short — title can be mostly English + Kannada tag
-        "subtitle": "ಉತ್ತಮ ವ್ಯಾಪಕ ಸರಿಯಾದ ಉಲ್ಬಣ ಸಲಹೆಗಾಗಿ ನಿಮ್ಮ ಮಣ್ಣು ಮತ್ತು ಬೆಳೆ ಪರಿಸ್ಥಿತಿಗಳನ್ನು ನಮೂದಿಸಿ.",
+        "title": "🌱 ಸ್ಮಾರ್ಟ್ ಫೆರ್ಟಿಲೈಸರ್ ಶಿಫಾರಸು",
+        "subtitle": "ಉತ್ತಮ ಉಲ್ಬಣ ಶಿಫಾರಸು ಪಡೆಯಲು ನಿಮ್ಮ ಮಣ್ಣು ಮತ್ತು ಬೆಳೆ ಪರಿಸ್ಥಿತಿಗಳನ್ನು ಅಥವಾ ಮೌಲ್ಯಗಳನ್ನು ನಮೂದಿಸಿ.",
         "soil_crop": "ಮಣ್ಣು ಮತ್ತು ಬೆಳೆ ಮಾಹಿತಿ",
-        "nutrient_title": "ಸಸ್ಯೋತ್ಪಾದಕ ಮತ್ತು ಹವಾಮಾನ ಮಟ್ಟಗಳು",
+        "nutrient_title": "ಪೋಷಕಾಂಶ ಮತ್ತು ಪರಿಸರ ಮಟ್ಟಗಳು",
         "nitrogen": "ನೈಟ್ರೋಜನ್ (N) - ppm",
         "phosphorous": "ಫಾಸ್ಫರಸ್ (P) - ppm",
         "potassium": "ಪೊಟ್ಯಾಸಿಯಂ (K) - ppm",
         "temperature": "ತಾಪಮಾನ (°C)",
         "humidity": "ಆರ್ದ್ರತೆ (%)",
-        "moisture": "ಆರ್ಡ್ರತೆ (%)",
+        "moisture": "ಮಣ್ಣಿನ ಒಡ್ಡಲೆ/ಆರ್ಡ್ರತೆ (%)",
         "soil_type": "ಮಣ್ಣಿನ ಪ್ರಕಾರ",
         "crop_type": "ಬೆಳೆ ಪ್ರಕಾರ",
-        "get_btn": "ವೈಶಿಷ್ಟ್ಯ ಶಿಫಾರಸು ಪಡೆವು",
+        "get_btn": "ಉಲ್ಬಣ ಶಿಫಾರಸು ಪಡೆ (Get Recommendation)",
         "recommended": "ಶಿಫಾರಸು ಮಾಡಲಾದ ಉಲ್ಬಣ",
         "recommendation_label": "ಶಿಫಾರಸು:",
-        "helper": "ದಯವಿಟ್ಟು ನಿಮ್ಮ ಡೇಟಾವನ್ನು ನಮೂದಿಸಿ ಮತ್ತು 'Get Recommendation' ಕ್ಲಿಕ್ ಮಾಡಿ.",
-        "model_perf": "ಮಾದರಿ ಕಾರ್ಯಕ್ಷಮತೆ ಹೋಲಿಕೆ (ನಕಲಿ)"
+        "helper": "ನಿಮ್ಮ ಮಾಹಿತಿಯನ್ನು ನಮೂದಿಸಿ ಮತ್ತು 'ಉಲ್ಬಣ ಶಿಫಾರಸು ಪಡೆ' ಬಟನ್ ಅನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ.",
+        "model_perf": "ಮಾದರಿ ಕಾರ್ಯಕ್ಷಮತೆ ಹೋಲಿಕೆ (ನಕಲಿ)",
+        "model_names": {
+            "Decision Tree (Basis for Rules)": "ನಿರ್ಣಾಯಕ ಮರ (Decision Tree)",
+            "Random Forest Classifier": "ರೆಂಡಮ್ ಫಾರೆಸ್ಟ್ ಕ್ಲಾಸಿಫೈರ್",
+            "Support Vector Machine (SVM)": "ಸಪೋರ್ಟ್ вэಕ್ಟರ್ ಮೆಶೀನ್ (SVM)",
+            "K-Nearest Neighbors (KNN)": "ಕೆ-ನಿಯರೆಸ್ಟ್ ನೈಬರ್ಸ್ (KNN)"
+        }
     }
 }
 
 # Soil and crop options:
-# Keep internal values in English (so logic comparisons still work), provide translations for display.
+# Keep internal values in English for logic, provide Kannada labels for display
 SOIL_OPTIONS = [
     ("Loamy", {"en": "Loamy", "kn": "ಲೋಮಿ (Loamy)"}),
-    ("Sandy", {"en": "Sandy", "kn": "ಮಣಿಯ (Sandy)"}),
-    ("Clayey", {"en": "Clayey", "kn": "ಕ್ಲೇಯ್ ಮಣ್ಣು (Clayey)"}),
-    ("Silt", {"en": "Silt", "kn": "ಸಿಡ್ಲ್ (Silt)"}),
+    ("Sandy", {"en": "Sandy", "kn": "ಮಣ್ಣು (Sandy)"}),
+    ("Clayey", {"en": "Clayey", "kn": "ಕ್ಲೇಯ್ (Clayey)"}),
+    ("Silt", {"en": "Silt", "kn": "ಸಿಲ್ (Silt)"}),
     ("Peat", {"en": "Peat", "kn": "ಪೀಟ್ (Peat)"})
 ]
 
 CROP_OPTIONS = [
     ("Rice", {"en": "Rice", "kn": "ಅನ್ನ (Rice)"}),
-    ("Maize", {"en": "Maize", "kn": "ಮಕ್ಕೆಜೋಳ (Maize)"}),
+    ("Maize", {"en": "Maize", "kn": "ಮಕ್ಕೆಗಳು / ಜೋಳ (Maize)"}),
     ("Wheat", {"en": "Wheat", "kn": "ಗೋಧಿ (Wheat)"}),
     ("Millet", {"en": "Millet", "kn": "ಜೋಳ (Millet)"}),
-    ("Cotton", {"en": "Cotton", "kn": "ಕಬ್ಬಿಣ (Cotton)"}),
+    ("Cotton", {"en": "Cotton", "kn": "ಹತ್ತಿ (Cotton)"}),
     ("Pulses", {"en": "Pulses", "kn": "ಕಾಳು (Pulses)"}),
-    ("Vegetables", {"en": "Vegetables", "kn": " ತರಕಾರಿಗಳು (Vegetables)"})
+    ("Vegetables", {"en": "Vegetables", "kn": "ತರಕಾರಿ (Vegetables)"})
 ]
 
-# --- UI: language selector (remember selection) ---
+# --- Language selector (remember selection) ---
 if "ui_lang" not in st.session_state:
     st.session_state["ui_lang"] = "English"
 
 lang = st.sidebar.selectbox("Language / ಭಾಷೆ", ["English", "Kannada"], index=0 if st.session_state["ui_lang"] == "English" else 1)
 st.session_state["ui_lang"] = lang
-
-# Convenience alias
 tr = TRANSLATIONS[lang]
 
-# --- Page header and layout ---
+# --- Header ---
 st.markdown(f"<h1 class='header-title'>{tr['title']}</h1>", unsafe_allow_html=True)
 st.markdown(f"<p class='text-center text-lg text-gray-400 mb-8'>{tr['subtitle']}</p>", unsafe_allow_html=True)
 
@@ -190,25 +199,22 @@ with col_input:
     st.subheader(tr["soil_type"] + " / " + tr["crop_type"])
     c7, c8 = st.columns(2)
 
-    # Soil Type selectbox: display translated labels, but return internal English value
-    soil_display = [opt[1][ 'en' ] if lang == "English" else opt[1]['kn'] for opt in SOIL_OPTIONS]
+    # Soil Type selectbox: display translated labels, return internal english values
+    soil_display = [opt[1]['en'] if lang == "English" else opt[1]['kn'] for opt in SOIL_OPTIONS]
     soil_values = [opt[0] for opt in SOIL_OPTIONS]
-    soil_index_default = 0
-    soil_choice_display = c7.selectbox(tr["soil_type"], options=soil_display, index=soil_index_default)
+    soil_choice_display = c7.selectbox(tr["soil_type"], options=soil_display, index=0)
     soil_type = soil_values[soil_display.index(soil_choice_display)]
 
-    # Crop Type selectbox: same technique
+    # Crop Type: display translated labels, return internal english values
     crop_display = [opt[1]['en'] if lang == "English" else opt[1]['kn'] for opt in CROP_OPTIONS]
     crop_values = [opt[0] for opt in CROP_OPTIONS]
-    crop_index_default = 0
-    crop_choice_display = c8.selectbox(tr["crop_type"], options=crop_display, index=crop_index_default)
+    crop_choice_display = c8.selectbox(tr["crop_type"], options=crop_display, index=0)
     crop_type = crop_values[crop_display.index(crop_choice_display)]
 
     # Button (translated)
     if st.button(tr["get_btn"], use_container_width=True):
         if any(v is None or v < 0 for v in [N, P, K, T, H, M]):
-            # show error in current language
-            st.error("Please ensure all numerical inputs are valid and non-negative." if lang == "English" else "ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಸಂಖ್ಯಾತ್ಮಕ ಇನ್ಪುಟ್‌ಗಳು ಸರಿಯಿತೆಂದು ಪರಿಶೀಲಿಸಿ.")
+            st.error("Please ensure all numerical inputs are valid and non-negative." if lang == "English" else "ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಸಂಖ್ಯಾತ್ಮಕ ಇನ್ಪುಟ್‌ಗಳು ಮಾನ್ಯವಾಗಿರುವುದನ್ನು ಖಚಿತಪಡಿಸಿ.")
         else:
             fertilizer, reason = get_recommendation(N, P, K, M, soil_type, crop_type)
             st.session_state.result = (fertilizer, reason)
@@ -221,21 +227,55 @@ with col_result:
 
     if st.session_state.result[0]:
         fertilizer, reason = st.session_state.result
-        st.markdown(f"<div class='result-title'>{tr['recommendation_label']}</div>", unsafe_allow_html=True)
-        # show recommendation text plainly (no big green box)
-        st.markdown(f"<div class='result-text'><strong>{fertilizer}</strong><br>{reason}</div>", unsafe_allow_html=True)
+        # Show Kannada header and then the fertilizer name (English kept for correctness)
+        if lang == "Kannada":
+            st.markdown(f"<div class='result-title'>{tr['recommendation_label']}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='result-text'><strong>{fertilizer}</strong></div>", unsafe_allow_html=True)
+            # Kannada translation of reason (simple translation)
+            # For safety we show original reason in parentheses
+            # Provide a Kannada translation line + original english reason below
+            kannada_reason = ""
+            # Small set of Kannada translations for common reasons:
+            if "Nitrogen" in reason or "N is severely low" in reason:
+                kannada_reason = "ಮಣ್ಣಿನಲ್ಲಿ ನೈಟ್ರೋಜನ್ ಕಡಿಮೆಯಾಗಿದೆ. ಎನ್-ಪ್ರಧಾನ ಉಲ್ಬಣವನ್ನು ಬಳಸಿ."
+            elif "Phosphorous" in reason or "Phosphates" in reason:
+                kannada_reason = "ಮಣ್ಣಿನಲ್ಲಿ ಫಾಸ್ಫರಸ್ ಕಡಿಮೆ. ಮೃದುವಾದ ಬೇರು ಅಭಿವೃದ್ಧಿಗಾಗಿ DAP ಅಥವಾ SSP ಬಳಸಿರಿ."
+            elif "Potassium" in reason or "Potash" in reason:
+                kannada_reason = "ಮಣ್ಣು ಪುಟಾಸಿಯಮ್ ಕಡಿಮೆ. ಪೋಟಾಶ್ ಗುಣಮಟ್ಟ ಮತ್ತು ರೋಗ ನಿರೋಧಕತೆಗೆ ಸಹಕಾರಿ."
+            elif "NPK levels are generally balanced" in reason:
+                kannada_reason = "NPK ಮಟ್ಟಗಳು ಸಾಮಾನ್ಯವಾಗಿ ಸಮತೋಲನದಲ್ಲಿವೆ."
+            elif "Moisture is critically low" in reason:
+                kannada_reason = "ನೀರಿನ ಪ್ರಮಾಣ ತಗ್ಗಿದೆ — ಜೈವಿಕ ಒಗ್ಗರಣೆ ಹೆಚ್ಚಿಸಿ ಹಾಗು ನೀರಾವರಿ ಗಮನಿಸಿ."
+            elif "Moisture is high" in reason:
+                kannada_reason = "ನೀರಿನ ಪ್ರಮಾಣ ಹೆಚ್ಚಿದೆ — ಮೈದಾನದಲ್ಲಿ ಪ್ರವಾಹ/ರನ್-ಆಫ್ ತಡೆಯಿರಿ."
+            else:
+                kannada_reason = ""  # fallback empty
+
+            if kannada_reason:
+                st.markdown(f"<div class='small-muted'>{kannada_reason}</div>", unsafe_allow_html=True)
+            # show original english reason (small)
+            st.markdown(f"<div class='small-muted' style='margin-top:6px;'>({reason})</div>", unsafe_allow_html=True)
+
+        else:
+            # English display
+            st.markdown(f"<div class='result-title'>{tr['recommendation_label']}</div>", unsafe_allow_html=True)
+            st.markdown(f"<div class='result-text'><strong>{fertilizer}</strong><br>{reason}</div>", unsafe_allow_html=True)
+
     else:
         st.markdown(f"<p class='text-lg text-gray-300'>{tr['helper']}</p>", unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown(f"<h3 class='text-lg font-bold text-green-400 text-center mb-3'>{tr['model_perf']}</h3>", unsafe_allow_html=True)
 
+    # show model names translated if Kannada selected
+    model_name_map = tr.get("model_names", {})
     for model in MOCK_MODEL_ACCURACIES:
         accuracy_percent = model["accuracy"] * 100
+        display_name = model_name_map.get(model["name"], model["name"])
         st.markdown(f"""
         <div class="text-sm" style="margin-bottom:10px;">
             <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                <span style="color:#cbd5e1;">{model['name']}</span>
+                <span style="color:#cbd5e1;">{display_name}</span>
                 <span style="color:#86efac;">{accuracy_percent:.1f}%</span>
             </div>
             <div style="background-color:#374151; border-radius:999px; height:10px; width:100%;">
