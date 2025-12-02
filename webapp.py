@@ -176,7 +176,6 @@ st.markdown("<h1 class='header-title'>🌱 Smart Fertilizer Recommendation</h1>"
 st.markdown("<p class='text-center text-lg text-gray-400 mb-8'>Input your soil and crop conditions to get an optimal fertilizer suggestion.</p>", unsafe_allow_html=True)
 
 # --- LANGUAGE SELECTOR (added, does not alter app logic/content) ---
-# This replicates the simple dropdown appearance in your screenshot.
 if "ui_lang" not in st.session_state:
     st.session_state["ui_lang"] = "Kannada"  # default shown in screenshot
 
@@ -241,13 +240,13 @@ with col_input:
         st.session_state.result = (None, None)
 
 with col_result:
-    st.markdown("<div class='result-box'>", unsafe_allow_html=True)
+    # Show heading always, but only show the green result box when we have a recommendation
     st.markdown("<h2 class='text-xl font-bold text-green-800 mb-4'>Recommended Fertilizer</h2>", unsafe_allow_html=True)
 
     if st.session_state.result[0]:
-        # Display the successful recommendation
+        # Display the successful recommendation inside the green result box
         fertilizer, reason = st.session_state.result
-        
+        st.markdown("<div class='result-box'>", unsafe_allow_html=True)
         st.markdown(f"""
         <svg class="w-12 h-12 text-green-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -255,13 +254,10 @@ with col_result:
         <p class='text-2xl font-extrabold text-green-200 mb-2'>{fertilizer}</p>
         <p class='text-sm text-green-300'>{reason}</p>
         """, unsafe_allow_html=True)
+        st.markdown("</div>", unsafe_allow_html=True)
     else:
-        # Display the initial message WITHOUT the large decorative SVG (removed)
-        st.markdown("""
-        <p class='text-lg text-gray-300'>Enter your data and click 'Get Recommendation'.</p>
-        """, unsafe_allow_html=True)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
+        # No recommendation yet — show small helper text ONLY (no green box)
+        st.markdown("<p class='text-lg text-gray-300'>Enter your data and click 'Get Recommendation'.</p>", unsafe_allow_html=True)
     
     st.markdown("---")
     
