@@ -75,17 +75,16 @@ st.markdown("""
         border-radius: 0.5rem;
         padding: 1rem;
     }
-    .result-box {
-        border: 2px solid #68d391; /* Green-300 */
-        background-color: #064e3b; /* Dark Green for results */
-        color: #f0fff4; /* Light text in results */
-        padding: 2rem;
-        border-radius: 0.5rem;
-        text-align: center;
-        min-height: 250px;
+
+    /* small styling for result text (keeps it simple, non-box) */
+    .result-title {
+        color: #9ae6b4; /* light green */
+        font-weight: 700;
+        margin-bottom: 0.3rem;
     }
-    .result-box .text-xl, .result-box .text-2xl {
-        color: #bcf5d4; /* Lighter green for results text */
+    .result-text {
+        color: #d1fae5;
+        font-size: 1rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -240,21 +239,14 @@ with col_input:
         st.session_state.result = (None, None)
 
 with col_result:
-    # Show heading always, but only show the green result box when we have a recommendation
+    # Show heading always
     st.markdown("<h2 class='text-xl font-bold text-green-800 mb-4'>Recommended Fertilizer</h2>", unsafe_allow_html=True)
 
+    # If result exists, show plain text (no green box, no SVG)
     if st.session_state.result[0]:
-        # Display the successful recommendation inside the green result box
         fertilizer, reason = st.session_state.result
-        st.markdown("<div class='result-box'>", unsafe_allow_html=True)
-        st.markdown(f"""
-        <svg class="w-12 h-12 text-green-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <p class='text-2xl font-extrabold text-green-200 mb-2'>{fertilizer}</p>
-        <p class='text-sm text-green-300'>{reason}</p>
-        """, unsafe_allow_html=True)
-        st.markdown("</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='result-title'>Recommendation:</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='result-text'><strong>{fertilizer}</strong><br><span>{reason}</span></div>", unsafe_allow_html=True)
     else:
         # No recommendation yet — show small helper text ONLY (no green box)
         st.markdown("<p class='text-lg text-gray-300'>Enter your data and click 'Get Recommendation'.</p>", unsafe_allow_html=True)
@@ -268,13 +260,13 @@ with col_result:
         accuracy_percent = model["accuracy"] * 100
         # Updated text colors for dark mode visibility
         st.markdown(f"""
-        <div class="text-sm">
-            <div class="flex justify-between mb-1">
-                <span class="font-medium text-gray-300">{model['name']}</span>
-                <span class="font-semibold text-green-300">{accuracy_percent:.1f}%</span>
+        <div class="text-sm" style="margin-bottom:10px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                <span style="color:#cbd5e1;">{model['name']}</span>
+                <span style="color:#86efac;">{accuracy_percent:.1f}%</span>
             </div>
-            <div class="w-full bg-gray-600 rounded-full h-2.5">
-                <div class="h-2.5 rounded-full" style="background-color: #10b981; width: {accuracy_percent}%;"></div>
+            <div style="background-color:#374151; border-radius:999px; height:10px; width:100%;">
+                <div style="background-color:#10b981; height:10px; border-radius:999px; width:{accuracy_percent}%;"></div>
             </div>
         </div>
         """, unsafe_allow_html=True)
